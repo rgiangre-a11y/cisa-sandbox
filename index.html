@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CISA NICC Training Portal (Classroom Simulation)</title>
+<title>CISA NICC Training Portal: DHS Mission 4 (Classroom Simulation)</title>
 <style>
   :root {
     --bg: #0b0d10;
@@ -119,7 +119,7 @@
 <div class="wrap">
 
   <header>
-    <h1>CISA NICC Training Portal &mdash; Classroom Simulation</h1>
+    <h1>CISA NICC Training Portal &mdash; DHS Mission 4 Classroom Simulation</h1>
     <div class="size-controls" role="group" aria-label="Text size">
       Text size:
       <button class="action-btn small" id="smaller" aria-label="Make text smaller">A&minus;</button>
@@ -152,18 +152,29 @@
   </section>
 
   <!-- Quick-access buttons: clicking always works, no typing needed -->
-  <nav class="panel" aria-label="Quick-access commands">
-    <h2>Click a button or type the command shown in its label.</h2>
+  <nav class="panel" aria-label="Mission 4 briefing commands">
+    <h2>Mission 4 briefing: click a button or type the command shown in its label.</h2>
     <div class="btn-row">
       <button class="action-btn help" data-cmd="help">❓ Help (help)</button>
+      <button class="action-btn help" data-cmd="mission-4">🛡️ DHS Mission 4 (mission-4)</button>
       <button class="action-btn" data-cmd="sectors">📊 Sectors (sectors)</button>
       <button class="action-btn" data-cmd="fema-codes">📜 FEMA Mission Areas (fema-codes)</button>
+      <button class="action-btn" data-cmd="define">📖 Glossary (define)</button>
+    </div>
+  </nav>
+
+  <nav class="panel" aria-label="Lab commands">
+    <h2>Lab tools: inspect, assess, and investigate.</h2>
+    <div class="btn-row">
+      <button class="action-btn" data-cmd="blueprint agency">🏛️ Blueprint: Federal Office</button>
       <button class="action-btn" data-cmd="blueprint water">💧 Blueprint: Water</button>
       <button class="action-btn" data-cmd="blueprint power">⚡ Blueprint: Power</button>
       <button class="action-btn" data-cmd="blueprint transit">🚊 Blueprint: Transit</button>
       <button class="action-btn" data-cmd="thira-hazard natural">🌪️ Hazard: Natural</button>
       <button class="action-btn" data-cmd="thira-hazard tech">⚙️ Hazard: Tech</button>
       <button class="action-btn" data-cmd="thira-hazard adversarial">🥷 Hazard: Adversarial</button>
+      <button class="action-btn" data-cmd="emerging-tech">🔮 Emerging Tech Risks (emerging-tech)</button>
+      <button class="action-btn" data-cmd="case-file">🗂️ Cybercrime Case File (case-file)</button>
       <button class="action-btn" data-cmd="matrix-tool">🧮 Risk Calculator (matrix-tool)</button>
       <button class="action-btn danger" data-cmd="clear">🧹 Clear Screen (clear)</button>
     </div>
@@ -207,7 +218,7 @@ ${LINE}
 16. Water and Wastewater Systems
 
 TIP: Try "blueprint water", "blueprint power", or "blueprint transit"
-to inspect a facility from sectors 16, 8, and 15.`,
+to inspect a facility from sectors 16, 8, and 15.\n\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'fema-codes': `${LINE}
 FEMA NATIONAL PREPAREDNESS GOAL - THE 5 MISSION AREAS
@@ -240,7 +251,7 @@ VULNERABILITY REPORT:
 2. [PHYSICAL]  North perimeter fence has a broken latch; back door uses a manual key lock.
 3. [HUMAN]     One shared login is used by every shift for SCADA access ("Operator1 / Password123").
 
-THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+THINK ABOUT IT: Which ONE fix would you make first, and why?\nUNKNOWN WORD? Type define followed by the word, for example: define scada\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'blueprint power': `[ASSET BLUEPRINT: Regional Electrical Substation - Grid East]
 ${DASH}
@@ -253,7 +264,7 @@ VULNERABILITY REPORT:
 2. [PHYSICAL]  No security camera (CCTV) coverage on the backup diesel generator enclosure.
 3. [HUMAN]     Office staff click phishing emails often; no Multi-Factor Authentication (MFA) on email.
 
-THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+THINK ABOUT IT: Which ONE fix would you make first, and why?\nUNKNOWN WORD? Type define followed by the word, for example: define scada\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'blueprint transit': `[ASSET BLUEPRINT: Metro Light Rail Transit Control Center]
 ${DASH}
@@ -265,7 +276,7 @@ VULNERABILITY REPORT:
 2. [PHYSICAL]  Backup server tapes sit in an uncooled utility closet with no access log.
 3. [HUMAN]     Outside vendors have permanent, unlimited network access (no "least privilege").
 
-THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+THINK ABOUT IT: Which ONE fix would you make first, and why?\nUNKNOWN WORD? Type define followed by the word, for example: define scada\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'thira-hazard natural': `[THIRA HAZARD PROFILE: NATURAL]
 ${DASH}
@@ -273,7 +284,7 @@ ${DASH}
 - Frequency Score: 3/5 (occurs every 3-5 years in this region)
 - Expected Impact: High risk of a long loss of commercial electrical power.
 
-NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'thira-hazard tech': `[THIRA HAZARD PROFILE: TECHNOLOGICAL]
 ${DASH}
@@ -281,7 +292,7 @@ ${DASH}
 - Frequency Score: 2/5 (unlikely, but very severe when it happens)
 - Expected Impact: Sudden pressure surges or automatic safety-valve lockouts.
 
-NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.\nDHS MISSION 4 LINK: Goal 4.2 (critical infrastructure security and resilience)`,
 
   'thira-hazard adversarial': `[THIRA HAZARD PROFILE: ADVERSARIAL (HUMAN-CAUSED)]
 ${DASH}
@@ -289,27 +300,186 @@ ${DASH}
 - Frequency Score: 4/5 (very active threat against infrastructure)
 - Expected Impact: Operator screens encrypted, loss of facility visibility, ransom demand.
 
-NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.
+DHS MISSION 4 LINK: Goal 4.2 (critical infrastructure) and Goal 4.4 (combat cybercrime).
+See how investigators respond: type case-file`,
+
+  'mission-4': `${LINE}
+DHS STRATEGIC PLAN, FISCAL YEARS 2023-2027
+MISSION 4: SECURE CYBERSPACE AND CRITICAL INFRASTRUCTURE
+${LINE}
+The Department of Homeland Security (DHS) has six missions. Mission 4 is about
+protecting computer networks and the essential services Americans depend on,
+working WITH private companies and state and local governments.
+
+GOAL 4.1  Support the cybersecurity of federal civilian networks
+          Plain language: protect the computers of non-military federal agencies.
+          In this portal: blueprint agency
+
+GOAL 4.2  Strengthen the security and resilience of critical infrastructure
+          Plain language: keep water, power, transit, and the other sectors running.
+          In this portal: sectors, blueprint water/power/transit, thira-hazard, matrix-tool
+
+GOAL 4.3  Assess and counter evolving cybersecurity and emerging technology risks
+          Plain language: get ready for new threats before they arrive.
+          In this portal: emerging-tech
+
+GOAL 4.4  Combat cybercrime
+          Plain language: investigate online criminals and help victims.
+          In this portal: case-file
+
+KEY DHS PLAYERS: CISA (the nation's cyber defense agency) leads Goals 4.1 and 4.2.
+The U.S. Secret Service and Homeland Security Investigations (HSI) investigate cybercrime.
+
+SOURCE: DHS Strategic Plan FY2023-2027 (dhs.gov). Goal wording here is simplified.`,
+
+  'blueprint agency': `[ASSET BLUEPRINT: Regional Field Office - Federal Benefits Agency (fictional)]
+${DASH}
+- OFFICE NETWORK: 120 staff laptops, shared file server, public website for applications
+- DATA HELD: Names, addresses, and benefit records for 40,000 residents
+- WHY IT MATTERS: Federal civilian networks hold sensitive personal data and deliver
+  services people rely on. CISA helps protect these networks (DHS Goal 4.1).
+
+VULNERABILITY REPORT:
+1. [TECHNICAL] The public website runs software with a known, actively exploited flaw.
+               It is listed in CISA's Known Exploited Vulnerabilities (KEV) catalog,
+               and federal agencies are required to fix KEV flaws by a set deadline.
+2. [PHYSICAL]  The server room door is propped open during the day for airflow.
+3. [HUMAN]     Staff reuse personal passwords at work, and there is no MFA.
+
+BIG IDEA - ZERO TRUST: Federal agencies are moving to "zero trust," which means
+never automatically trusting a user or device just because it is inside the building
+or network. Every login and every request gets checked.
+
+THINK ABOUT IT: How is protecting a federal office DIFFERENT from protecting a water plant?
+UNKNOWN WORD? Type define followed by the word, for example: define zero-trust
+DHS MISSION 4 LINK: Goal 4.1 (federal civilian networks)`,
+
+  'emerging-tech': `${LINE}
+EMERGING TECHNOLOGY RISK BRIEFING (DHS GOAL 4.3)
+${LINE}
+1. QUANTUM COMPUTING
+   - What it is: a new kind of computer that could someday solve certain math
+     problems far faster than today's computers.
+   - The risk: much of today's encryption depends on math that is hard for normal
+     computers. A powerful quantum computer could break it.
+   - "Harvest now, decrypt later": attackers may steal encrypted data TODAY and
+     wait to unlock it when quantum computers are ready.
+   - The defense: in 2024, the National Institute of Standards and Technology (NIST)
+     published new "post-quantum" encryption standards. Organizations are planning
+     the switch now.
+
+2. ARTIFICIAL INTELLIGENCE (AI)
+   - Risk: criminals can use AI to write convincing phishing emails or fake a
+     manager's voice on the phone ("deepfakes").
+   - Defense: AI can also help defenders spot unusual activity on a network faster.
+
+3. MORE CONNECTED DEVICES
+   - Risk: plants add internet-connected sensors and cameras. Each one is a new
+     possible way in if it is not secured.
+   - Defense: change default passwords, update devices, keep OT separate from IT.
+
+THINK ABOUT IT: Pick ONE blueprint. Which emerging technology could make its
+vulnerabilities worse in the next 5 years? Explain your reasoning.`,
+
+  'case-file': `${LINE}
+CYBERCRIME CASE FILE #VT-0417 (FICTIONAL TRAINING CASE) - DHS GOAL 4.4
+${LINE}
+VICTIM: Green River Falls Water and Sewer Department (small Vermont town, fictional)
+
+TIMELINE OF EVENTS:
+ Day 1  A billing clerk opens an email that looks like an overdue invoice and
+        types her password into a fake login page. (PHISHING)
+ Day 3  Criminals log in with the stolen password. There is no MFA to stop them.
+ Day 9  Ransomware locks the billing server and office computers. A note demands
+        payment in cryptocurrency. The water plant's OT network is separated and
+        keeps running, so residents still have safe water.
+
+WHO GETS INVOLVED:
+ - Town manager and IT contractor: isolate infected computers, keep the plant safe
+ - Local police: take the initial report
+ - FBI: lead federal investigator for ransomware; victims can report at ic3.gov
+ - U.S. Secret Service / Homeland Security Investigations: DHS cybercrime investigators,
+   especially when money or cryptocurrency trails are involved
+ - CISA: technical help to contain the attack and recover safely
+
+EVIDENCE RULES (connects to criminal justice):
+ - Do NOT wipe or rebuild infected computers before investigators collect evidence.
+ - Save the ransom note, phishing email, and system logs.
+ - Record who handled each piece of evidence and when (CHAIN OF CUSTODY).
+
+THE LAW: The federal Computer Fraud and Abuse Act makes it a crime to access a
+computer without authorization. Federal agencies, including the FBI, discourage
+paying ransoms because payment does not guarantee recovery and funds more crime.
+
+CASE QUESTIONS:
+ 1. Which ONE security control would have stopped this attack earliest?
+ 2. Why did separating OT from IT matter for public safety here?
+ 3. Which FEMA mission area does each responder's action belong to?`,
 
   'help': `${LINE}
 AVAILABLE COMMANDS (type one and press ENTER, or click a button)
 ${LINE}
 help                       Show this list
+mission-4                  DHS Mission 4 and its four goals
+define [word]              Plain-language definition (try: define scada)
 sectors                    List the 16 critical infrastructure sectors
 fema-codes                 FEMA's 5 mission areas and key core capabilities
+blueprint agency           Inspect a federal civilian office (Goal 4.1)
 blueprint water            Inspect a water treatment plant
 blueprint power            Inspect an electrical substation
 blueprint transit          Inspect a light rail control center
 thira-hazard natural       Natural hazard profile
 thira-hazard tech          Technological hazard profile
 thira-hazard adversarial   Human-caused (adversarial) hazard profile
+emerging-tech              Quantum, AI, and connected-device risks (Goal 4.3)
+case-file                  Fictional cybercrime investigation (Goal 4.4)
 matrix-tool                Calculate a risk score (Threat x Vulnerability x Consequence)
 clear                      Clear the screen
 
 SHORTCUTS: Up/Down arrows repeat earlier commands. Tab finishes a command for you.`
 };
 
-const COMMAND_NAMES = Object.keys(COMMANDS).concat(['matrix-tool', 'clear']);
+/* ---------- Glossary for "define" (teachers can add terms here) ---------- */
+const GLOSSARY = {
+  'scada': ['SCADA (Supervisory Control and Data Acquisition)', 'The computer system that lets operators watch and control equipment spread across a large area, like every pump and pipe in a town.'],
+  'plc': ['PLC (Programmable Logic Controller)', 'A small, tough computer that directly runs one machine, such as turning a pump on or off.'],
+  'hmi': ['HMI (Human-Machine Interface)', 'The screen or dashboard operators use to see and control the plant.'],
+  'ot': ['OT (Operational Technology)', 'Computers that control PHYSICAL things: valves, breakers, rail switches. If OT is attacked, real-world equipment can be affected.'],
+  'it': ['IT (Information Technology)', 'Regular office computers and systems: email, billing, files, websites.'],
+  'mfa': ['MFA (Multi-Factor Authentication)', 'Logging in with two or more proofs, like a password PLUS a code on your phone. A stolen password alone is not enough.'],
+  'rdp': ['RDP (Remote Desktop Protocol)', 'A tool that lets someone control a computer from far away. Left open to the internet, criminals can try to use it too.'],
+  'vpn': ['VPN (Virtual Private Network)', 'A protected, encrypted tunnel for connecting to a network from outside, like a private hallway into the building.'],
+  'phishing': ['Phishing', 'A fake message (email, text, call) designed to trick someone into giving up a password or clicking something harmful.'],
+  'ransomware': ['Ransomware', 'Harmful software that locks an organization\u2019s files and demands payment to unlock them.'],
+  'malware': ['Malware', 'Any software made to cause harm, steal information, or take control of a computer.'],
+  'firewall': ['Firewall', 'A security gate between networks that allows or blocks traffic based on rules.'],
+  'airgap': ['Air gap', 'A network with NO connection at all to other networks or the internet. True air gaps are rare.'],
+  'patch': ['Patch', 'A software update that fixes a security flaw. Unpatched systems are easier to attack.'],
+  'leastprivilege': ['Least privilege', 'Giving each person or vendor ONLY the access they need for their job, and nothing more.'],
+  'encryption': ['Encryption', 'Scrambling information so only someone with the right key can read it.'],
+  'zerotrust': ['Zero trust', 'A security approach that never automatically trusts a user or device. Every login and request is checked.'],
+  'kev': ['KEV (Known Exploited Vulnerabilities) catalog', 'CISA\u2019s public list of security flaws that criminals are actively using. Federal agencies must fix them by set deadlines.'],
+  'thira': ['THIRA (Threat and Hazard Identification and Risk Assessment)', 'FEMA\u2019s process for communities to identify threats and hazards, their impacts, and the capabilities needed to handle them.'],
+  'resilience': ['Resilience', 'The ability to prepare for, withstand, and recover quickly from a disruption.'],
+  'chainofcustody': ['Chain of custody', 'A record of who handled each piece of evidence, when, and why, so it can be trusted in court.']
+};
+function glossaryKey(word) { return word.toLowerCase().replace(/[\s\-_]/g, ''); }
+function runDefine(term) {
+  const list = Object.keys(GLOSSARY).map(k => GLOSSARY[k][0].split(' (')[0]).join(', ');
+  if (!term) {
+    print('GLOSSARY: type define followed by a word, for example: define scada\n\nTerms available:\n' + list, 'system-msg');
+    return;
+  }
+  const entry = GLOSSARY[glossaryKey(term)];
+  if (entry) {
+    print('[DEFINE] ' + entry[0] + '\n' + entry[1]);
+    return;
+  }
+  print('No definition found for "' + term + '". Terms available:\n' + list, 'warning-msg');
+}
+
+const COMMAND_NAMES = Object.keys(COMMANDS).concat(['matrix-tool', 'clear', 'define']);
 
 /* ---------- Page elements ---------- */
 const input = document.getElementById('cmd-input');
@@ -331,7 +501,7 @@ function print(text, style) {
 
 function welcome() {
   print('--- CISA NICC TRAINING PORTAL: ACCESS GRANTED ---\n[STATUS: READY FOR CLASSROOM INTERACTION]', 'system-msg');
-  print('HOW TO START: Type  help  and press ENTER, or click any button below the screen.', 'tip');
+  print('HOW TO START: Type  mission-4  and press ENTER for your briefing, or click any button below the screen.\nType  help  any time to see every command.', 'tip');
 }
 
 /* ---------- Typo helper: suggests the closest real command ---------- */
@@ -373,11 +543,12 @@ function executeCommand(rawInput) {
   if (clean === 'clear') { historyBox.innerHTML = ''; welcome(); return; }
   if (clean === 'matrix-tool') { startWizard(); return; }
 
+  if (clean === 'define' || clean.startsWith('define ')) { runDefine(clean.slice(6).trim()); return; }
   if (COMMANDS[clean]) { print(COMMANDS[clean]); return; }
 
   // Helpful hints for half-typed commands
   if (clean === 'blueprint') {
-    print('Almost! Add a facility: blueprint water, blueprint power, or blueprint transit.', 'warning-msg');
+    print('Almost! Add a facility: blueprint agency, blueprint water, blueprint power, or blueprint transit.', 'warning-msg');
     return;
   }
   if (clean === 'thira-hazard' || clean === 'thira') {
