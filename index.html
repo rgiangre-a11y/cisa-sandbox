@@ -1,224 +1,515 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CISA NICC Training Portal</title>
-    <style>
-        body { 
-            background-color: #0b0d10; 
-            color: #39ff14; 
-            font-family: 'Courier New', Courier, monospace; 
-            padding: 20px; 
-            font-size: 16px; 
-            margin: 0; 
-        }
-        #terminal { 
-            max-width: 950px; 
-            margin: 10px auto; 
-            background: #040608; 
-            border: 2px solid #1a331a; 
-            box-shadow: 0 0 25px rgba(57, 255, 20, 0.15); 
-            padding: 20px; 
-            border-radius: 6px; 
-            height: 60vh; 
-            overflow-y: auto; 
-        }
-        /* New Button Panel for Easy Access and No-Fail Clicks */
-        #button-panel {
-            max-width: 950px;
-            margin: 15px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 10px;
-            background: #11151c;
-            border: 1px solid #1a331a;
-            border-radius: 6px;
-        }
-        .action-btn {
-            background: #040608;
-            color: #00e5ff;
-            border: 1px solid #00e5ff;
-            padding: 8px 14px;
-            font-family: inherit;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .action-btn:hover {
-            background: #00e5ff;
-            color: #040608;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-        }
-        .output { 
-            white-space: pre-wrap; 
-            margin-bottom: 14px; 
-            line-height: 1.5; 
-        }
-        .system-msg { color: #00e5ff; }
-        .error-msg { color: #ff3838; font-weight: bold; }
-        .success-msg { color: #39ff14; font-weight: bold; }
-        .warning-msg { color: #ff9f1a; font-weight: bold; }
-        .prompt-line { display: flex; align-items: center; margin-top: 10px; }
-        .prompt { color: #39ff14; font-weight: bold; margin-right: 10px; white-space: nowrap; }
-        input { 
-            background: transparent; 
-            border: none; 
-            color: #ffffff; 
-            font-family: inherit; 
-            font-size: inherit; 
-            width: 100%; 
-            outline: none; 
-            caret-color: #39ff14; 
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CISA NICC Training Portal (Classroom Simulation)</title>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --screen: #040608;
+    --panel: #11151c;
+    --edge: #1a331a;
+    --green: #39ff14;
+    --cyan: #00e5ff;
+    --amber: #ff9f1a;
+    --red: #ff4d4d;
+    --white: #f2f2f2;
+    --dim: #8fbf8f;
+    --font-size: 17px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--green);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: var(--font-size);
+    margin: 0;
+    padding: 16px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  /* Top bar: title + text size controls */
+  header {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: 10px; margin-bottom: 10px;
+  }
+  header h1 { font-size: 1.05em; margin: 0; color: var(--cyan); font-weight: bold; }
+  .size-controls { display: flex; gap: 6px; align-items: center; color: var(--dim); font-size: 0.85em; }
+
+  #terminal {
+    background: var(--screen);
+    border: 2px solid var(--edge);
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.15);
+    padding: 18px;
+    border-radius: 6px;
+    height: 58vh;
+    min-height: 320px;
+    overflow-y: auto;
+  }
+  .output {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0 0 14px 0;
+    line-height: 1.55;
+  }
+  .echo { color: var(--white); margin-bottom: 6px; }
+  .system-msg { color: var(--cyan); }
+  .error-msg { color: var(--red); font-weight: bold; }
+  .success-msg { color: var(--green); font-weight: bold; }
+  .warning-msg { color: var(--amber); font-weight: bold; }
+  .tip { color: var(--dim); }
+
+  .prompt-line { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .prompt { color: var(--green); font-weight: bold; white-space: nowrap; }
+  .prompt.wizard { color: var(--amber); }
+  #cmd-input {
+    background: transparent; border: none; border-bottom: 1px dashed var(--edge);
+    color: var(--white); font-family: inherit; font-size: inherit;
+    width: 100%; padding: 4px 2px; caret-color: var(--green);
+  }
+  #cmd-input:focus { outline: none; border-bottom-color: var(--green); }
+
+  /* Button panels */
+  .panel {
+    margin-top: 12px; padding: 10px;
+    background: var(--panel); border: 1px solid var(--edge); border-radius: 6px;
+  }
+  .panel h2 { font-size: 0.85em; color: var(--dim); margin: 0 0 8px 2px; font-weight: normal; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .action-btn {
+    background: var(--screen); color: var(--cyan); border: 1px solid var(--cyan);
+    padding: 9px 14px; font-family: inherit; font-size: 0.85em;
+    cursor: pointer; border-radius: 4px; min-height: 40px;
+  }
+  .action-btn:hover { background: var(--cyan); color: var(--screen); }
+  .action-btn.danger { color: var(--red); border-color: var(--red); }
+  .action-btn.danger:hover { background: var(--red); color: var(--screen); }
+  .action-btn.help { color: var(--green); border-color: var(--green); }
+  .action-btn.help:hover { background: var(--green); color: var(--screen); }
+  .action-btn.score { color: var(--amber); border-color: var(--amber); min-width: 52px; font-size: 1em; }
+  .action-btn.score:hover { background: var(--amber); color: var(--screen); }
+  .action-btn.small { padding: 4px 10px; min-height: 32px; }
+
+  /* Strong, visible keyboard focus for every control */
+  .action-btn:focus-visible, #cmd-input:focus-visible {
+    outline: 3px solid var(--amber); outline-offset: 2px;
+  }
+
+  #wizard-panel { display: none; border-color: var(--amber); }
+  #wizard-panel.active { display: block; }
+
+  footer { color: var(--dim); font-size: 0.75em; margin-top: 12px; line-height: 1.5; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  @media (max-width: 600px) {
+    body { padding: 8px; }
+    #terminal { padding: 12px; height: 55vh; }
+    .action-btn { flex: 1 1 45%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition: none !important; }
+  }
+</style>
 </head>
 <body>
+<div class="wrap">
 
-<div id="terminal">
-    <div id="history">
-        <div class="output system-msg">--- CISA NICC TRAINING PORTAL ACCESS GRANTED ---
-[STATUS: READY FOR CLASSROOM INTERACTION]
-
-👉 INSTRUCTIONS: Type a command below and press ENTER, or simply click one of the quick-access buttons beneath this window!</div>
+  <header>
+    <h1>CISA NICC Training Portal &mdash; Classroom Simulation</h1>
+    <div class="size-controls" role="group" aria-label="Text size">
+      Text size:
+      <button class="action-btn small" id="smaller" aria-label="Make text smaller">A&minus;</button>
+      <button class="action-btn small" id="larger" aria-label="Make text larger">A+</button>
     </div>
+  </header>
+
+  <!-- role="log" + aria-live lets screen readers announce each new result -->
+  <div id="terminal" role="log" aria-live="polite" aria-label="Terminal output">
+    <div id="history"></div>
     <div class="prompt-line">
-        <span class="prompt">CISA-NICC:\Student></span>
-        <input type="text" id="cmd-input" autofocus autocomplete="off" autocapitalize="none">
+      <label for="cmd-input" class="prompt" id="prompt-label">CISA-NICC:\Student&gt;</label>
+      <input type="text" id="cmd-input" autocomplete="off" autocapitalize="none"
+             spellcheck="false" aria-describedby="input-hint">
     </div>
-</div>
+    <span id="input-hint" class="sr-only">Type a command such as help, then press Enter. Up and down arrows recall earlier commands. Tab completes a command.</span>
+  </div>
 
-<!-- Fallback Panel: If typing fails or quotes break, clicking these ALWAYS works -->
-<div id="button-panel">
-    <button class="action-btn" onclick="executeCommand('sectors')">📊 List Sectors</button>
-    <button class="action-btn" onclick="executeCommand('fema-codes')">📜 FEMA Codes</button>
-    <button class="action-btn" onclick="executeCommand('blueprint water')">💧 Blueprint: Water</button>
-    <button class="action-btn" onclick="executeCommand('blueprint power')">⚡ Blueprint: Power</button>
-    <button class="action-btn" onclick="executeCommand('blueprint transit')">🚊 Blueprint: Transit</button>
-    <button class="action-btn" onclick="executeCommand('thira-hazard natural')">🌪️ Hazard: Natural</button>
-    <button class="action-btn" onclick="executeCommand('thira-hazard tech')">⚙️ Hazard: Tech</button>
-    <button class="action-btn" onclick="executeCommand('thira-hazard adversarial')">🥷 Hazard: Adversarial</button>
-    <button class="action-btn" onclick="executeCommand('matrix-tool')">🧮 Risk Calculator</button>
-    <button class="action-btn" style="color:#ff3838; border-color:#ff3838;" onclick="executeCommand('clear')">🧹 Clear Screen</button>
+  <!-- Shown only while the Risk Calculator is asking for a score -->
+  <section id="wizard-panel" class="panel" aria-label="Risk calculator score buttons">
+    <h2 id="wizard-title">Pick a score from 1 (lowest) to 5 (highest):</h2>
+    <div class="btn-row">
+      <button class="action-btn score" data-score="1">1</button>
+      <button class="action-btn score" data-score="2">2</button>
+      <button class="action-btn score" data-score="3">3</button>
+      <button class="action-btn score" data-score="4">4</button>
+      <button class="action-btn score" data-score="5">5</button>
+      <button class="action-btn danger" data-score="cancel">Cancel</button>
+    </div>
+  </section>
+
+  <!-- Quick-access buttons: clicking always works, no typing needed -->
+  <nav class="panel" aria-label="Quick-access commands">
+    <h2>Click a button or type the command shown in its label.</h2>
+    <div class="btn-row">
+      <button class="action-btn help" data-cmd="help">❓ Help (help)</button>
+      <button class="action-btn" data-cmd="sectors">📊 Sectors (sectors)</button>
+      <button class="action-btn" data-cmd="fema-codes">📜 FEMA Mission Areas (fema-codes)</button>
+      <button class="action-btn" data-cmd="blueprint water">💧 Blueprint: Water</button>
+      <button class="action-btn" data-cmd="blueprint power">⚡ Blueprint: Power</button>
+      <button class="action-btn" data-cmd="blueprint transit">🚊 Blueprint: Transit</button>
+      <button class="action-btn" data-cmd="thira-hazard natural">🌪️ Hazard: Natural</button>
+      <button class="action-btn" data-cmd="thira-hazard tech">⚙️ Hazard: Tech</button>
+      <button class="action-btn" data-cmd="thira-hazard adversarial">🥷 Hazard: Adversarial</button>
+      <button class="action-btn" data-cmd="matrix-tool">🧮 Risk Calculator (matrix-tool)</button>
+      <button class="action-btn danger" data-cmd="clear">🧹 Clear Screen (clear)</button>
+    </div>
+  </nav>
+
+  <footer>
+    Training simulation for classroom use only. All facilities, networks, and credentials are fictional.
+    This site is not affiliated with or endorsed by CISA, FEMA, or DHS.
+  </footer>
 </div>
 
 <script>
-    const input = document.getElementById('cmd-input');
-    const history = document.getElementById('history');
-    const terminal = document.getElementById('terminal');
+/* =====================================================================
+   CISA NICC TRAINING PORTAL — CLASSROOM SIMULATOR
+   Teachers: to change what a command prints, edit the text inside the
+   COMMANDS list below. Keep each block between the ` backtick marks.
+   ===================================================================== */
 
-    // Automatically focuses text box when clicking the page
-    document.addEventListener('click', function(e) {
-        if (e.target.tagName !== 'BUTTON') {
-            input.focus();
-        }
-    });
+const LINE = '======================================================================';
+const DASH = '----------------------------------------------------------------------';
 
-    // Unified execution engine to process commands flawlessly
-    function executeCommand(rawInput) {
-        let cleanInput = rawInput.trim().toLowerCase();
-        
-        // Print user input to the terminal history log
-        const logDiv = document.createElement('div');
-        logDiv.className = 'output prompt';
-        logDiv.textContent = 'CISA-NICC:\\Student> ' + rawInput;
-        history.appendChild(logDiv);
+const COMMANDS = {
+  'sectors': `${LINE}
+CISA CRITICAL INFRASTRUCTURE SECTORS (16 TOTAL)
+${LINE}
+ 1. Chemical
+ 2. Commercial Facilities
+ 3. Communications
+ 4. Critical Manufacturing
+ 5. Dams
+ 6. Defense Industrial Base
+ 7. Emergency Services
+ 8. Energy
+ 9. Financial Services
+10. Food and Agriculture
+11. Government Services and Facilities
+12. Healthcare and Public Health
+13. Information Technology
+14. Nuclear Reactors, Materials, and Waste
+15. Transportation Systems
+16. Water and Wastewater Systems
 
-        if (cleanInput === '') return;
+TIP: Try "blueprint water", "blueprint power", or "blueprint transit"
+to inspect a facility from sectors 16, 8, and 15.`,
 
-        if (cleanInput === 'clear') {
-            history.innerHTML = '';
-            terminal.scrollTop = 0;
-            return;
-        }
+  'fema-codes': `${LINE}
+FEMA NATIONAL PREPAREDNESS GOAL - THE 5 MISSION AREAS
+${LINE}
+PREVENTION : Avoid, prevent, or stop a threatened or actual act of terrorism.
+PROTECTION : Secure people, assets, and systems against the greatest threats and hazards.
+MITIGATION : Reduce loss of life and property by lessening the impact of disasters.
+RESPONSE   : Save lives, protect property and the environment, meet basic needs after an incident.
+RECOVERY   : Help communities affected by an incident recover effectively.
 
-        if (cleanInput === 'matrix-tool') {
-            runCalculatorWizard();
-            terminal.scrollTop = terminal.scrollHeight;
-            return;
-        }
+CROSS-CUTTING CORE CAPABILITIES (used in ALL 5 mission areas):
+  - Planning
+  - Public Information and Warning
+  - Operational Coordination
 
-        // Hardcoded, bulletproof matches to bypass quote mapping problems
-        let outputText = "";
-        let isError = false;
+CYBER-RELATED CORE CAPABILITIES TO WATCH FOR:
+  - Cybersecurity ........................ (Protection)
+  - Supply Chain Integrity and Security .. (Protection)
+  - Infrastructure Systems ............... (Response and Recovery)`,
 
-        if (cleanInput === "sectors") {
-            outputText = `======================================================================\nCISA DESIGNATED CRITICAL INFRASTRUCTURE SECTORS (16 TOTAL)\n======================================================================\n1. Chemical                   7. Financial Services     13. Nuclear Reactors\n2. Commercial Facilities      8. Food & Agriculture     14. Transportation Systems\n3. Communications             9. Government Facilities  15. Water & Wastewater\n4. Critical Manufacturing    10. Healthcare & Public   16. Defense Industrial Base\n5. Dams                      11. Information Tech\n6. Emergency Services        12. Energy Sector`;
-        } 
-        else if (cleanInput === "fema-codes") {
-            outputText = `======================================================================\nFEMA NATIONAL PREPAREDNESS FRAMEWORK - CORE MISSION AREAS\n======================================================================\n PREVENTION: Avoid, prevent, or stop an imminent threatened cyber/physical attack.\n PROTECTION: Secure citizens, residents, visitors, and assets against hazards.\n MITIGATION: Reduce loss of life and property by lessening the impact of disasters.\n RESPONSE: Respond quickly to save lives and protect property after an incident.\n RECOVERY: Assist communities affected by an incident to recover effectively.\n\n* CROSS-CUTTING CORE CAPABILITIES: Cybersecurity, Infrastructure Systems, Supply Chain Integrity.`;
-        } 
-        else if (cleanInput === "blueprint water") {
-            outputText = `[ASSET Blueprint: Municipal Water Treatment Facility - District 4]\n----------------------------------------------------------------------\n- OFFICE IT NETWORK: 192.168.10.0/24 (Email, Billing, Staff Wi-Fi)\n- PLANT OT/SCADA NETWORK: 10.240.50.0/24 (Air-Gapped Gateway Firewalled)\n- HARDWARE: 4x Allen-Bradley PLCs controlling high-pressure water pumps.\n- SYSTEM SOFTWARE: Human-Machine Interface (HMI) running on unpatched Windows 10 Workstation.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] HMI Workstation has operating system updates disabled since 2022.\n2. [PHYSICAL] Perimeter fence on North sector has a broken latch; backdoor lock is manual keyway.\n3. [HUMAN] Shared login credentials used across shifts for SCADA network access ("Operator1 / Password123").`;
-        } 
-        else if (cleanInput === "blueprint power") {
-            outputText = `[ASSET Blueprint: Regional Electrical Substation - Grid East]\n----------------------------------------------------------------------\n- NETWORK HARDWARE: Cisco Industrial Ethernet Switches running SCADA protocol.\n- POWER CRITICAL ASSETS: 2x 500MVA Phase-Shifting Transformers.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] Remote desktop access (RDP) enabled directly from public internet for maintenance technicians without VPN requirements.\n2. [PHYSICAL] No active CCTV coverage on the secondary backup diesel generator enclosure.\n3. [HUMAN] Office staff highly susceptible to phishing; no Multi-Factor Authentication (MFA) on corporate emails.`;
-        } 
-        else if (cleanInput === "blueprint transit") {
-            outputText = `[ASSET Blueprint: Metro Light Rail Transit Control Center]\n----------------------------------------------------------------------\n- TECHNICAL ARCHITECTURE: Centralized Traffic Control (CTC) network managing rail switches and signals.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] Automated switching software utilizes legacy open-text protocols without cryptographic signing.\n2. [PHYSICAL] Emergency server backup tapes stored in an uncooled utility closet without logging access.\n3. [HUMAN] Third-party vendors have unrestricted, permanent access to the network without Least Privilege enforcement.`;
-        } 
-        else if (cleanInput === "thira-hazard natural") {
-            outputText = `[THIRA HAZARD PROFILE: NATURAL DESIGNATION]\n- Threat: Category 3 Hurricane / Regional Flash Flooding\n- Historical Frequency Score: 3/5 (Occurs every 3-5 years in this quadrant)\n- Expected Vulnerability Impact: High risk of prolonged loss of off-site commercial electrical power grid.`;
-        } 
-        else if (cleanInput === "thira-hazard tech") {
-Use code with caution.
-outputText = [THIRA HAZARD PROFILE: TECHNOLOGICAL DESIGNATION]\n- Threat: Catastrophic Grid Transformer Failure / SCADA Logic Loop Crash\n- Historical Frequency Score: 2/5 (Low likelihood, high severity hardware exhaustion)\n- Expected Vulnerability Impact: Unexpected physical pressure surges or immediate safety valve line lockouts.;
+  'blueprint water': `[ASSET BLUEPRINT: Municipal Water Treatment Facility - District 4]
+${DASH}
+- OFFICE IT NETWORK: 192.168.10.0/24 (Email, Billing, Staff Wi-Fi)
+- PLANT OT/SCADA NETWORK: 10.240.50.0/24 (Separated by a firewall - NOT truly air-gapped)
+- HARDWARE: 4x Programmable Logic Controllers (PLCs) running high-pressure water pumps
+- SOFTWARE: Human-Machine Interface (HMI) on an unpatched Windows 10 workstation
+
+VULNERABILITY REPORT:
+1. [TECHNICAL] HMI workstation has had operating system updates disabled since 2022.
+2. [PHYSICAL]  North perimeter fence has a broken latch; back door uses a manual key lock.
+3. [HUMAN]     One shared login is used by every shift for SCADA access ("Operator1 / Password123").
+
+THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+
+  'blueprint power': `[ASSET BLUEPRINT: Regional Electrical Substation - Grid East]
+${DASH}
+- NETWORK HARDWARE: Industrial Ethernet switches carrying SCADA traffic
+- CRITICAL ASSETS: 2x 500 MVA phase-shifting transformers
+- BACKUP: Diesel generator in a secondary enclosure
+
+VULNERABILITY REPORT:
+1. [TECHNICAL] Remote Desktop (RDP) is open to the public internet for technicians - no VPN required.
+2. [PHYSICAL]  No security camera (CCTV) coverage on the backup diesel generator enclosure.
+3. [HUMAN]     Office staff click phishing emails often; no Multi-Factor Authentication (MFA) on email.
+
+THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+
+  'blueprint transit': `[ASSET BLUEPRINT: Metro Light Rail Transit Control Center]
+${DASH}
+- ARCHITECTURE: Centralized Traffic Control (CTC) network managing rail switches and signals
+- OPERATIONS: 24/7 dispatch floor with third-party vendor support
+
+VULNERABILITY REPORT:
+1. [TECHNICAL] Switching software uses old, unencrypted protocols with no digital signatures.
+2. [PHYSICAL]  Backup server tapes sit in an uncooled utility closet with no access log.
+3. [HUMAN]     Outside vendors have permanent, unlimited network access (no "least privilege").
+
+THINK ABOUT IT: Which ONE fix would you make first, and why?`,
+
+  'thira-hazard natural': `[THIRA HAZARD PROFILE: NATURAL]
+${DASH}
+- Threat: Category 3 hurricane / regional flash flooding
+- Frequency Score: 3/5 (occurs every 3-5 years in this region)
+- Expected Impact: High risk of a long loss of commercial electrical power.
+
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+
+  'thira-hazard tech': `[THIRA HAZARD PROFILE: TECHNOLOGICAL]
+${DASH}
+- Threat: Catastrophic grid transformer failure / SCADA logic crash
+- Frequency Score: 2/5 (unlikely, but very severe when it happens)
+- Expected Impact: Sudden pressure surges or automatic safety-valve lockouts.
+
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+
+  'thira-hazard adversarial': `[THIRA HAZARD PROFILE: ADVERSARIAL (HUMAN-CAUSED)]
+${DASH}
+- Threat: State-sponsored ransomware spreading from office IT into plant OT
+- Frequency Score: 4/5 (very active threat against infrastructure)
+- Expected Impact: Operator screens encrypted, loss of facility visibility, ransom demand.
+
+NEXT STEP: Run "matrix-tool" and score this hazard against one blueprint.`,
+
+  'help': `${LINE}
+AVAILABLE COMMANDS (type one and press ENTER, or click a button)
+${LINE}
+help                       Show this list
+sectors                    List the 16 critical infrastructure sectors
+fema-codes                 FEMA's 5 mission areas and key core capabilities
+blueprint water            Inspect a water treatment plant
+blueprint power            Inspect an electrical substation
+blueprint transit          Inspect a light rail control center
+thira-hazard natural       Natural hazard profile
+thira-hazard tech          Technological hazard profile
+thira-hazard adversarial   Human-caused (adversarial) hazard profile
+matrix-tool                Calculate a risk score (Threat x Vulnerability x Consequence)
+clear                      Clear the screen
+
+SHORTCUTS: Up/Down arrows repeat earlier commands. Tab finishes a command for you.`
+};
+
+const COMMAND_NAMES = Object.keys(COMMANDS).concat(['matrix-tool', 'clear']);
+
+/* ---------- Page elements ---------- */
+const input = document.getElementById('cmd-input');
+const historyBox = document.getElementById('history');
+const terminal = document.getElementById('terminal');
+const promptLabel = document.getElementById('prompt-label');
+const wizardPanel = document.getElementById('wizard-panel');
+const wizardTitle = document.getElementById('wizard-title');
+const PROMPT_TEXT = 'CISA-NICC:\\Student>';
+
+/* ---------- Output helpers (textContent keeps typed text safe) ---------- */
+function print(text, style) {
+  const div = document.createElement('div');
+  div.className = 'output ' + (style || '');
+  div.textContent = text;
+  historyBox.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
 }
-else if (cleanInput === "thira-hazard adversarial") {
-outputText = [THIRA HAZARD PROFILE: ADVERSARIAL DESIGNATION]\n- Threat: State-Sponsored Ransomware Deployment on Corporate IT moving to OT\n- Historical Frequency Score: 4/5 (Extremely high active threat targeting infrastructure)\n- Expected Vulnerability Impact: Total encryption of operational interfaces, loss of facility visibility, ransom demands.;
+
+function welcome() {
+  print('--- CISA NICC TRAINING PORTAL: ACCESS GRANTED ---\n[STATUS: READY FOR CLASSROOM INTERACTION]', 'system-msg');
+  print('HOW TO START: Type  help  and press ENTER, or click any button below the screen.', 'tip');
 }
-else if (cleanInput === "help") {
-outputText = Available commands:\n  'sectors', 'fema-codes', 'blueprint [water/power/transit]', 'thira-hazard [natural/tech/adversarial]', 'matrix-tool', 'clear';
+
+/* ---------- Typo helper: suggests the closest real command ---------- */
+function closestCommand(word) {
+  function distance(a, b) {
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1,
+                           d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+      }
+    }
+    return d[a.length][b.length];
+  }
+  let best = null, bestScore = Infinity;
+  COMMAND_NAMES.forEach(name => {
+    const s = distance(word, name);
+    if (s < bestScore) { bestScore = s; best = name; }
+  });
+  return bestScore <= 4 ? best : null;
 }
-else {
-outputText = Error: Command '${rawInput}' not recognized. Click a button below if you are experiencing text entry layout issues.;
-isError = true;
+
+/* ---------- Main command engine ---------- */
+const pastCommands = [];
+let pastIndex = 0;
+
+function executeCommand(rawInput) {
+  // While the risk calculator is running, input goes to it instead
+  if (wizard) { answerWizard(rawInput); return; }
+
+  const clean = rawInput.trim().toLowerCase().replace(/\s+/g, ' ');
+  print(PROMPT_TEXT + ' ' + rawInput, 'echo');
+  if (clean === '') return;
+
+  pastCommands.push(clean);
+  pastIndex = pastCommands.length;
+
+  if (clean === 'clear') { historyBox.innerHTML = ''; welcome(); return; }
+  if (clean === 'matrix-tool') { startWizard(); return; }
+
+  if (COMMANDS[clean]) { print(COMMANDS[clean]); return; }
+
+  // Helpful hints for half-typed commands
+  if (clean === 'blueprint') {
+    print('Almost! Add a facility: blueprint water, blueprint power, or blueprint transit.', 'warning-msg');
+    return;
+  }
+  if (clean === 'thira-hazard' || clean === 'thira') {
+    print('Almost! Add a type: thira-hazard natural, thira-hazard tech, or thira-hazard adversarial.', 'warning-msg');
+    return;
+  }
+
+  const guess = closestCommand(clean);
+  print('Command "' + rawInput.trim() + '" not recognized.' +
+        (guess ? ' Did you mean: ' + guess + ' ?' : '') +
+        '\nType help to see every command, or click a button below.', 'error-msg');
 }
-const outDiv = document.createElement('div');
-outDiv.className = 'output ' + (isError ? 'error-msg' : '');
-outDiv.textContent = outputText;
-history.appendChild(outDiv);
-// Push scroll downward to follow output
-terminal.scrollTop = terminal.scrollHeight;
+
+/* ---------- Risk calculator (runs inside the terminal, no pop-ups) ---------- */
+const STEPS = [
+  { key: 't', name: 'THREAT LIKELIHOOD',     hint: 'How likely is this threat to happen?' },
+  { key: 'v', name: 'VULNERABILITY SEVERITY', hint: 'How weak is the facility against it?' },
+  { key: 'c', name: 'CONSEQUENCE IMPACT',    hint: 'How bad would the damage be?' }
+];
+let wizard = null;
+
+function startWizard() {
+  wizard = { step: 0, scores: {} };
+  print(LINE + '\nCISA RISK CALCULATOR  (Risk = Threat x Vulnerability x Consequence)\n' + LINE +
+        '\nYou will enter 3 scores from 1 (lowest) to 5 (highest).' +
+        '\nType a number and press ENTER, or click a score button. Type cancel to stop.', 'system-msg');
+  wizardPanel.classList.add('active');
+  askStep();
 }
-// Monitor physical Enter keypress events
-input.addEventListener('keydown', function(e) {
-if (e.key === 'Enter') {
-executeCommand(input.value);
-input.value = '';
+
+function askStep() {
+  const s = STEPS[wizard.step];
+  print('STEP ' + (wizard.step + 1) + ' of 3 - ' + s.name + ': ' + s.hint + ' (1-5)', 'warning-msg');
+  promptLabel.textContent = 'RISK-CALC [' + s.name + ' 1-5]>';
+  promptLabel.classList.add('wizard');
+  wizardTitle.textContent = 'Step ' + (wizard.step + 1) + ' of 3: ' + s.name + ' (1 = lowest, 5 = highest)';
 }
+
+function endWizard() {
+  wizard = null;
+  wizardPanel.classList.remove('active');
+  promptLabel.textContent = PROMPT_TEXT;
+  promptLabel.classList.remove('wizard');
+  input.focus();
+}
+
+function answerWizard(raw) {
+  const clean = raw.trim().toLowerCase();
+  print(promptLabel.textContent + ' ' + raw, 'echo');
+  if (clean === 'cancel' || clean === 'clear') {
+    print('Risk calculator cancelled.', 'tip');
+    endWizard();
+    return;
+  }
+  const n = Number(clean);
+  if (!Number.isInteger(n) || n < 1 || n > 5) {
+    print('Please enter a whole number from 1 to 5 (or type cancel).', 'error-msg');
+    return;
+  }
+  wizard.scores[STEPS[wizard.step].key] = n;
+  wizard.step++;
+  if (wizard.step < STEPS.length) { askStep(); return; }
+
+  const { t, v, c } = wizard.scores;
+  const risk = t * v * c;
+  let level = 'LOW RISK - monitor and maintain current controls';
+  let style = 'success-msg';
+  if (risk >= 60) { level = 'CRITICAL RISK - immediate security action required'; style = 'error-msg'; }
+  else if (risk >= 25) { level = 'MEDIUM RISK - plan security controls'; style = 'warning-msg'; }
+
+  print(LINE + '\nRESULTS\n' + LINE +
+        '\nThreat [' + t + '/5] x Vulnerability [' + v + '/5] x Consequence [' + c + '/5]' +
+        '\nRISK SCORE: ' + risk + ' out of 125' +
+        '\nScale: 1-24 Low | 25-59 Medium | 60-125 Critical', 'system-msg');
+  print('>> STATUS: ' + level, style);
+  print('NEXT: Lower ONE of your three scores with a security fix and run matrix-tool again. How much did the risk drop?', 'tip');
+  endWizard();
+}
+
+/* ---------- Keyboard: Enter, history arrows, Tab completion ---------- */
+input.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    executeCommand(input.value);
+    input.value = '';
+  } else if (e.key === 'ArrowUp' && !wizard && pastCommands.length) {
+    e.preventDefault();
+    pastIndex = Math.max(0, pastIndex - 1);
+    input.value = pastCommands[pastIndex];
+  } else if (e.key === 'ArrowDown' && !wizard && pastCommands.length) {
+    e.preventDefault();
+    pastIndex = Math.min(pastCommands.length, pastIndex + 1);
+    input.value = pastCommands[pastIndex] || '';
+  } else if (e.key === 'Tab' && !wizard && input.value.trim() !== '') {
+    const typed = input.value.trim().toLowerCase();
+    const matches = COMMAND_NAMES.filter(name => name.startsWith(typed));
+    if (matches.length === 1) {
+      e.preventDefault();
+      input.value = matches[0];
+    } else if (matches.length > 1) {
+      e.preventDefault();
+      print('Possible commands: ' + matches.join('   '), 'tip');
+    }
+  }
 });
-function runCalculatorWizard() {
-let t = prompt("Enter Threat Likelihood Score (1-5):");
-if (t === null) return;
-let v = prompt("Enter Vulnerability Severity Score (1-5):");
-if (v === null) return;
-let c = prompt("Enter Consequence Operational Impact Score (1-5):");
-if (c === null) return;
-let scoreT = Math.min(Math.max(parseInt(t) || 1, 1), 5);
-let scoreV = Math.min(Math.max(parseInt(v) || 1, 1), 5);
-let scoreC = Math.min(Math.max(parseInt(c) || 1, 1), 5);
-let rpn = scoreT * scoreV * scoreC;
-let riskLevel = "LOW RISK ASSESSMENT TIER";
-let textStyle = "success-msg";
-if (rpn >= 60) {
-riskLevel = "CRITICAL RISK - IMMEDIATE SECURITY INTERVENTION REQUIRED";
-textStyle = "error-msg";
-} else if (rpn >= 25) {
-riskLevel = "MEDIUM RISK - SECURITY CONTROLS STRATEGY REQUIRED";
-textStyle = "warning-msg";
+
+/* ---------- Buttons ---------- */
+document.querySelectorAll('[data-cmd]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (wizard) endWizard();   // a menu button cancels an unfinished calculation
+    executeCommand(btn.dataset.cmd);
+  });
+});
+document.querySelectorAll('[data-score]').forEach(btn => {
+  btn.addEventListener('click', () => { if (wizard) answerWizard(btn.dataset.score); });
+});
+
+/* ---------- Text size (helpful on projectors and for low vision) ---------- */
+let size = 17;
+function setSize(px) {
+  size = Math.min(26, Math.max(13, px));
+  document.documentElement.style.setProperty('--font-size', size + 'px');
 }
-const calcDiv = document.createElement('div');
-calcDiv.className = 'output system-msg';
-calcDiv.innerHTML = ======================================================================<br> +
-CISA RISK PRIORITY CALCULATOR ACTIVATED (Risk = T x V x C)<br> +
-======================================================================<br> +
->> EVALUATION METRICS RECORDED:<br> +
-   Threat [${scoreT}/5] x Vulnerability [${scoreV}/5] x Consequence [${scoreC}/5]<br> +
->> CALCULATED RISK PRIORITY NUMBER (RPN): ${rpn} / 125<br> +
-<span class="${textStyle}">>> SYSTEM STATUS INDEX: ${riskLevel}</span><br> +
-======================================================================;
-history.appendChild(calcDiv);
-}
+document.getElementById('larger').addEventListener('click', () => setSize(size + 2));
+document.getElementById('smaller').addEventListener('click', () => setSize(size - 2));
+
+/* Clicking empty terminal space puts the cursor back in the input */
+terminal.addEventListener('click', () => {
+  if (!window.getSelection().toString()) input.focus();
+});
+
+welcome();
+input.focus();
+</script>
+</body>
+</html>
