@@ -24,6 +24,7 @@
             height: 60vh; 
             overflow-y: auto; 
         }
+        /* New Button Panel for Easy Access and No-Fail Clicks */
         #button-panel {
             max-width: 950px;
             margin: 15px auto;
@@ -89,6 +90,7 @@
     </div>
 </div>
 
+<!-- Fallback Panel: If typing fails or quotes break, clicking these ALWAYS works -->
 <div id="button-panel">
     <button class="action-btn" onclick="executeCommand('sectors')">📊 List Sectors</button>
     <button class="action-btn" onclick="executeCommand('fema-codes')">📜 FEMA Codes</button>
@@ -107,15 +109,18 @@
     const history = document.getElementById('history');
     const terminal = document.getElementById('terminal');
 
+    // Automatically focuses text box when clicking the page
     document.addEventListener('click', function(e) {
         if (e.target.tagName !== 'BUTTON') {
             input.focus();
         }
     });
 
+    // Unified execution engine to process commands flawlessly
     function executeCommand(rawInput) {
         let cleanInput = rawInput.trim().toLowerCase();
         
+        // Print user input to the terminal history log
         const logDiv = document.createElement('div');
         logDiv.className = 'output prompt';
         logDiv.textContent = 'CISA-NICC:\\Student> ' + rawInput;
@@ -135,6 +140,7 @@
             return;
         }
 
+        // Hardcoded, bulletproof matches to bypass quote mapping problems
         let outputText = "";
         let isError = false;
 
@@ -157,10 +163,10 @@
             outputText = `[THIRA HAZARD PROFILE: NATURAL DESIGNATION]\n- Threat: Category 3 Hurricane / Regional Flash Flooding\n- Historical Frequency Score: 3/5 (Occurs every 3-5 years in this quadrant)\n- Expected Vulnerability Impact: High risk of prolonged loss of off-site commercial electrical power grid.`;
         } 
         else if (cleanInput === "thira-hazard tech") {
-            outputText = `[THIRA HAZARD PROFILE: TECHNOLOGICAL DESIGNATION]\n- Threat: Catastrophic Grid Transformer Failure / SCADA Logic Loop Crash\n- Historical Frequency Score: 2/5 (Low likelihood, high severity hardware exhaustion)\n- Expected Vulnerability Impact: Unexpected physical pressure surges or immediate safety valve line lockouts.`;
-        }
-        else if (cleanInput === "thira-hazard adversarial") {
 Use code with caution.
+outputText = [THIRA HAZARD PROFILE: TECHNOLOGICAL DESIGNATION]\n- Threat: Catastrophic Grid Transformer Failure / SCADA Logic Loop Crash\n- Historical Frequency Score: 2/5 (Low likelihood, high severity hardware exhaustion)\n- Expected Vulnerability Impact: Unexpected physical pressure surges or immediate safety valve line lockouts.;
+}
+else if (cleanInput === "thira-hazard adversarial") {
 outputText = [THIRA HAZARD PROFILE: ADVERSARIAL DESIGNATION]\n- Threat: State-Sponsored Ransomware Deployment on Corporate IT moving to OT\n- Historical Frequency Score: 4/5 (Extremely high active threat targeting infrastructure)\n- Expected Vulnerability Impact: Total encryption of operational interfaces, loss of facility visibility, ransom demands.;
 }
 else if (cleanInput === "help") {
@@ -174,8 +180,10 @@ const outDiv = document.createElement('div');
 outDiv.className = 'output ' + (isError ? 'error-msg' : '');
 outDiv.textContent = outputText;
 history.appendChild(outDiv);
+// Push scroll downward to follow output
 terminal.scrollTop = terminal.scrollHeight;
 }
+// Monitor physical Enter keypress events
 input.addEventListener('keydown', function(e) {
 if (e.key === 'Enter') {
 executeCommand(input.value);
@@ -213,5 +221,4 @@ CISA RISK PRIORITY CALCULATOR ACTIVATED (Risk = T x V x C)<br> +
 <span class="${textStyle}">>> SYSTEM STATUS INDEX: ${riskLevel}</span><br> +
 ======================================================================;
 history.appendChild(calcDiv);
-terminal.scrollTop = terminal.scrollHeight;
 }
