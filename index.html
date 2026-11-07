@@ -3,36 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CISA NICC Training Portal - Sandbox Terminal</title>
+    <title>CISA NICC Training Portal</title>
     <style>
-        body { background-color: #0c0f12; color: #39ff14; font-family: 'Courier New', Courier, monospace; padding: 20px; font-size: 16px; margin: 0; }
-        #terminal { max-width: 900px; margin: 0 auto; background: #05070a; border: 2px solid #1f3a1f; box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); padding: 20px; border-radius: 5px; height: 80vh; overflow-y: auto; }
-        .output { white-space: pre-wrap; margin-bottom: 15px; line-height: 1.4; }
-        .system-msg { color: #00ffff; }
-        .error-msg { color: #ff3333; }
-        .prompt-line { display: flex; align-items: center; }
+        body { 
+            background-color: #0b0d10; 
+            color: #39ff14; 
+            font-family: 'Courier New', Courier, monospace; 
+            padding: 20px; 
+            font-size: 16px; 
+            margin: 0; 
+        }
+        #terminal { 
+            max-width: 950px; 
+            margin: 10px auto; 
+            background: #040608; 
+            border: 2px solid #1a331a; 
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.15); 
+            padding: 20px; 
+            border-radius: 6px; 
+            height: 60vh; 
+            overflow-y: auto; 
+        }
+        #button-panel {
+            max-width: 950px;
+            margin: 15px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            background: #11151c;
+            border: 1px solid #1a331a;
+            border-radius: 6px;
+        }
+        .action-btn {
+            background: #040608;
+            color: #00e5ff;
+            border: 1px solid #00e5ff;
+            padding: 8px 14px;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .action-btn:hover {
+            background: #00e5ff;
+            color: #040608;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+        .output { 
+            white-space: pre-wrap; 
+            margin-bottom: 14px; 
+            line-height: 1.5; 
+        }
+        .system-msg { color: #00e5ff; }
+        .error-msg { color: #ff3838; font-weight: bold; }
+        .success-msg { color: #39ff14; font-weight: bold; }
+        .warning-msg { color: #ff9f1a; font-weight: bold; }
+        .prompt-line { display: flex; align-items: center; margin-top: 10px; }
         .prompt { color: #39ff14; font-weight: bold; margin-right: 10px; white-space: nowrap; }
-        input { background: transparent; border: none; color: #ffffff; font-family: inherit; font-size: inherit; width: 100%; outline: none; caret-color: #39ff14; }
+        input { 
+            background: transparent; 
+            border: none; 
+            color: #ffffff; 
+            font-family: inherit; 
+            font-size: inherit; 
+            width: 100%; 
+            outline: none; 
+            caret-color: #39ff14; 
+        }
     </style>
 </head>
 <body>
 
 <div id="terminal">
-    <div class="output system-msg">--- CISA NICC TRAINING PORTAL ACCESS GRANTED ---
-Authorized Personnel Only. 11th-Grade CTE Cybersecurity Sandbox Active.
+    <div id="history">
+        <div class="output system-msg">--- CISA NICC TRAINING PORTAL ACCESS GRANTED ---
+[STATUS: READY FOR CLASSROOM INTERACTION]
 
-Available commands:
-  'sectors'                   - List CISA's 16 Critical Infrastructure Sectors
-  'fema-codes'                - Look up FEMA Mission Areas & Core Capabilities
-  'blueprint [asset_type]'    - Generate facility blueprint (Options: water, power, transit)
-  'thira-hazard [type]'       - View regional hazard profiles (Options: natural, tech, adversarial)
-  'matrix-tool'               - Run interactive CISA Risk Formula calculator
-  'clear'                     - Clear terminal screen</div>
-    <div id="history"></div>
+👉 INSTRUCTIONS: Type a command below and press ENTER, or simply click one of the quick-access buttons beneath this window!</div>
+    </div>
     <div class="prompt-line">
         <span class="prompt">CISA-NICC:\Student></span>
         <input type="text" id="cmd-input" autofocus autocomplete="off" autocapitalize="none">
     </div>
+</div>
+
+<div id="button-panel">
+    <button class="action-btn" onclick="executeCommand('sectors')">📊 List Sectors</button>
+    <button class="action-btn" onclick="executeCommand('fema-codes')">📜 FEMA Codes</button>
+    <button class="action-btn" onclick="executeCommand('blueprint water')">💧 Blueprint: Water</button>
+    <button class="action-btn" onclick="executeCommand('blueprint power')">⚡ Blueprint: Power</button>
+    <button class="action-btn" onclick="executeCommand('blueprint transit')">🚊 Blueprint: Transit</button>
+    <button class="action-btn" onclick="executeCommand('thira-hazard natural')">🌪️ Hazard: Natural</button>
+    <button class="action-btn" onclick="executeCommand('thira-hazard tech')">⚙️ Hazard: Tech</button>
+    <button class="action-btn" onclick="executeCommand('thira-hazard adversarial')">🥷 Hazard: Adversarial</button>
+    <button class="action-btn" onclick="executeCommand('matrix-tool')">🧮 Risk Calculator</button>
+    <button class="action-btn" style="color:#ff3838; border-color:#ff3838;" onclick="executeCommand('clear')">🧹 Clear Screen</button>
 </div>
 
 <script>
@@ -40,141 +107,111 @@ Available commands:
     const history = document.getElementById('history');
     const terminal = document.getElementById('terminal');
 
-    const responses = {
-        'sectors': `======================================================================
-CISA DESIGNATED CRITICAL INFRASTRUCTURE SECTORS (16 TOTAL)
-======================================================================
-1. Chemical                   7. Financial Services     13. Nuclear Reactors
-2. Commercial Facilities      8. Food & Agriculture     14. Transportation Systems
-3. Communications             9. Government Facilities  15. Water & Wastewater
-4. Critical Manufacturing    10. Healthcare & Public   16. Defense Industrial Base
-5. Dams                      11. Information Tech
-6. Emergency Services        12. Energy Sector`,
-
-        'fema-codes': `======================================================================
-FEMA NATIONAL PREPAREDNESS FRAMEWORK - CORE MISSION AREAS
-======================================================================
-[1] PREVENTION: Avoid, prevent, or stop an imminent threatened cyber/physical attack.
-[2] PROTECTION: Secure citizens, residents, visitors, and assets against hazards.
-[3] MITIGATION: Reduce loss of life and property by lessening the impact of disasters.
-[4] RESPONSE: Respond quickly to save lives and protect property after an incident.
-[5] RECOVERY: Assist communities affected by an incident to recover effectively.
-
-* CROSS-CUTTING CORE CAPABILITIES: Cybersecurity, Infrastructure Systems, Supply Chain Integrity.`,
-
-        'blueprint water': `[ASSET Blueprint: Municipal Water Treatment Facility - District 4]
-----------------------------------------------------------------------
-- OFFICE IT NETWORK: 192.168.10.0/24 (Email, Billing, Staff Wi-Fi)
-- PLANT OT/SCADA NETWORK: 10.240.50.0/24 (Air-Gapped Gateway Firewalled)
-- HARDWARE: 4x Allen-Bradley PLCs controlling high-pressure water pumps.
-- SYSTEM SOFTWARE: Human-Machine Interface (HMI) running on unpatched Windows 10 Workstation.
-
-VULNERABILITY REPORT EXPOSED:
-1. [TECHNICAL] HMI Workstation has operating system updates disabled since 2022.
-2. [PHYSICAL] Perimeter fence on North sector has a broken latch; backdoor lock is manual keyway.
-3. [HUMAN] Shared login credentials used across shifts for SCADA network access ("Operator1 / Password123").`,
-
-        'blueprint power': `[ASSET Blueprint: Regional Electrical Substation - Grid East]
-----------------------------------------------------------------------
-- NETWORK HARDWARE: Cisco Industrial Ethernet Switches running SCADA protocol.
-- POWER CRITICAL ASSETS: 2x 500MVA Phase-Shifting Transformers.
-
-VULNERABILITY REPORT EXPOSED:
-1. [TECHNICAL] Remote desktop access (RDP) enabled directly from public internet for maintenance technicians without VPN requirements.
-2. [PHYSICAL] No active CCTV coverage on the secondary backup diesel generator enclosure.
-3. [HUMAN] Office staff highly susceptible to phishing; no Multi-Factor Authentication (MFA) on corporate emails.`,
-
-        'blueprint transit': `[ASSET Blueprint: Metro Light Rail Transit Control Center]
-----------------------------------------------------------------------
-- TECHNICAL ARCHITECTURE: Centralized Traffic Control (CTC) network managing rail switches and signals.
-
-VULNERABILITY REPORT EXPOSED:
-1. [TECHNICAL] Automated switching software utilizes legacy open-text protocols without cryptographic signing.
-2. [PHYSICAL] Emergency server backup tapes stored in an uncooled utility closet without logging access.
-3. [HUMAN] Third-party vendors have unrestricted, permanent access to the network without Least Privilege enforcement.`,
-
-        'thira-hazard natural': `[THIRA HAZARD PROFILE: NATURAL DESIGNATION]
-- Threat: Category 3 Hurricane / Regional Flash Flooding
-- Historical Frequency Score: 3/5 (Occurs every 3-5 years in this quadrant)
-- Expected Vulnerability Impact: High risk of prolonged loss of off-site commercial electrical power grid.`,
-
-        'thira-hazard tech': `[THIRA HAZARD PROFILE: TECHNOLOGICAL DESIGNATION]
-- Threat: Catastrophic Grid Transformer Failure / SCADA Logic Loop Crash
-- Historical Frequency Score: 2/5 (Low likelihood, high severity hardware exhaustion)
-- Expected Vulnerability Impact: Unexpected physical pressure surges or immediate safety valve line lockouts.`,
-
-        'thira-hazard adversarial': `[THIRA HAZARD PROFILE: ADVERSARIAL DESIGNATION]
-- Threat: State-Sponsored Ransomware Deployment on Corporate IT moving to OT
-- Historical Frequency Score: 4/5 (Extremely high active threat targeting infrastructure)
-- Expected Vulnerability Impact: Total encryption of operational interfaces, loss of facility visibility, ransom demands.`,
-    };
-
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const rawCmd = input.value.trim();
-            const cmd = rawCmd.toLowerCase();
-            input.value = '';
-
-            // Print the entered command
-            printLine(\`CISA-NICC:\\Student> \${rawCmd}\`, 'prompt');
-
-            if (cmd === '') return;
-
-            if (cmd === 'clear') {
-                history.innerHTML = '';
-                return;
-            }
-
-            if (cmd === 'matrix-tool') {
-                runMatrixWizard();
-                return;
-            }
-
-            if (responses[cmd]) {
-                printLine(responses[cmd]);
-            } else if (cmd.startsWith('blueprint ')) {
-                printLine("Error: Asset type not recognized. Use: 'blueprint water', 'blueprint power', or 'blueprint transit'", 'error-msg');
-            } else if (cmd.startsWith('thira-hazard ')) {
-                printLine("Error: Hazard type not recognized. Use: 'thira-hazard natural', 'thira-hazard tech', or 'thira-hazard adversarial'", 'error-msg');
-            } else if (cmd === 'help') {
-                printLine(`Available commands:\n  'sectors', 'fema-codes', 'blueprint [water/power/transit]', 'thira-hazard [natural/tech/adversarial]', 'matrix-tool', 'clear'`);
-            } else {
-                printLine(\`Error: Command '\${rawCmd}' not recognized. Type 'help' for valid portal options.\`, 'error-msg');
-            }
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            input.focus();
         }
     });
 
-    function printLine(text, className = '') {
-        const div = document.createElement('div');
-        div.className = 'output ' + className;
-        div.textContent = text;
-        history.appendChild(div);
-        terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    function runMatrixWizard() {
-        printLine("======================================================================", 'system-msg');
-        printLine("CISA RISK PRIORITY CALCULATOR ACTIVATED (Risk = T x V x C)", 'system-msg');
-        printLine("======================================================================", 'system-msg');
+    function executeCommand(rawInput) {
+        let cleanInput = rawInput.trim().toLowerCase();
         
-        let t = prompt("Enter Threat Likelihood Score (1-5):");
-        let v = prompt("Enter Vulnerability Severity Score (1-5):");
-        let c = prompt("Enter Consequence Operational Impact Score (1-5):");
+        const logDiv = document.createElement('div');
+        logDiv.className = 'output prompt';
+        logDiv.textContent = 'CISA-NICC:\\Student> ' + rawInput;
+        history.appendChild(logDiv);
 
-        let scoreT = parseInt(t) || 1;
-        let scoreV = parseInt(v) || 1;
-        let scoreC = parseInt(c) || 1;
-        let rpn = scoreT * scoreV * scoreC;
+        if (cleanInput === '') return;
 
-        let riskLevel = "LOW RISK";
-        if (rpn >= 60) riskLevel = "CRITICAL RISK - IMMEDIATE MITIGATION REQUIRED";
-        else if (rpn >= 25) riskLevel = "MEDIUM RISK - MITIGATION REQUIRED";
+        if (cleanInput === 'clear') {
+            history.innerHTML = '';
+            terminal.scrollTop = 0;
+            return;
+        }
 
-        printLine(`>> USER INPUT RECORDED: Threat [\${scoreT}/5], Vulnerability [\${scoreV}/5], Consequence [\${scoreC}/5]`);
-        printLine(`>> CALCULATED RISK PRIORITY NUMBER (RPN): \${rpn} / 125`);
-        printLine(\`>> ASSESSMENT STATUS: \${riskLevel}\`, rpn >= 25 ? 'error-msg' : 'system-msg');
-    }
-</script>
+        if (cleanInput === 'matrix-tool') {
+            runCalculatorWizard();
+            terminal.scrollTop = terminal.scrollHeight;
+            return;
+        }
 
-</body>
-</html>
+        let outputText = "";
+        let isError = false;
+
+        if (cleanInput === "sectors") {
+            outputText = `======================================================================\nCISA DESIGNATED CRITICAL INFRASTRUCTURE SECTORS (16 TOTAL)\n======================================================================\n1. Chemical                   7. Financial Services     13. Nuclear Reactors\n2. Commercial Facilities      8. Food & Agriculture     14. Transportation Systems\n3. Communications             9. Government Facilities  15. Water & Wastewater\n4. Critical Manufacturing    10. Healthcare & Public   16. Defense Industrial Base\n5. Dams                      11. Information Tech\n6. Emergency Services        12. Energy Sector`;
+        } 
+        else if (cleanInput === "fema-codes") {
+            outputText = `======================================================================\nFEMA NATIONAL PREPAREDNESS FRAMEWORK - CORE MISSION AREAS\n======================================================================\n PREVENTION: Avoid, prevent, or stop an imminent threatened cyber/physical attack.\n PROTECTION: Secure citizens, residents, visitors, and assets against hazards.\n MITIGATION: Reduce loss of life and property by lessening the impact of disasters.\n RESPONSE: Respond quickly to save lives and protect property after an incident.\n RECOVERY: Assist communities affected by an incident to recover effectively.\n\n* CROSS-CUTTING CORE CAPABILITIES: Cybersecurity, Infrastructure Systems, Supply Chain Integrity.`;
+        } 
+        else if (cleanInput === "blueprint water") {
+            outputText = `[ASSET Blueprint: Municipal Water Treatment Facility - District 4]\n----------------------------------------------------------------------\n- OFFICE IT NETWORK: 192.168.10.0/24 (Email, Billing, Staff Wi-Fi)\n- PLANT OT/SCADA NETWORK: 10.240.50.0/24 (Air-Gapped Gateway Firewalled)\n- HARDWARE: 4x Allen-Bradley PLCs controlling high-pressure water pumps.\n- SYSTEM SOFTWARE: Human-Machine Interface (HMI) running on unpatched Windows 10 Workstation.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] HMI Workstation has operating system updates disabled since 2022.\n2. [PHYSICAL] Perimeter fence on North sector has a broken latch; backdoor lock is manual keyway.\n3. [HUMAN] Shared login credentials used across shifts for SCADA network access ("Operator1 / Password123").`;
+        } 
+        else if (cleanInput === "blueprint power") {
+            outputText = `[ASSET Blueprint: Regional Electrical Substation - Grid East]\n----------------------------------------------------------------------\n- NETWORK HARDWARE: Cisco Industrial Ethernet Switches running SCADA protocol.\n- POWER CRITICAL ASSETS: 2x 500MVA Phase-Shifting Transformers.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] Remote desktop access (RDP) enabled directly from public internet for maintenance technicians without VPN requirements.\n2. [PHYSICAL] No active CCTV coverage on the secondary backup diesel generator enclosure.\n3. [HUMAN] Office staff highly susceptible to phishing; no Multi-Factor Authentication (MFA) on corporate emails.`;
+        } 
+        else if (cleanInput === "blueprint transit") {
+            outputText = `[ASSET Blueprint: Metro Light Rail Transit Control Center]\n----------------------------------------------------------------------\n- TECHNICAL ARCHITECTURE: Centralized Traffic Control (CTC) network managing rail switches and signals.\n\nVULNERABILITY REPORT EXPOSED:\n1. [TECHNICAL] Automated switching software utilizes legacy open-text protocols without cryptographic signing.\n2. [PHYSICAL] Emergency server backup tapes stored in an uncooled utility closet without logging access.\n3. [HUMAN] Third-party vendors have unrestricted, permanent access to the network without Least Privilege enforcement.`;
+        } 
+        else if (cleanInput === "thira-hazard natural") {
+            outputText = `[THIRA HAZARD PROFILE: NATURAL DESIGNATION]\n- Threat: Category 3 Hurricane / Regional Flash Flooding\n- Historical Frequency Score: 3/5 (Occurs every 3-5 years in this quadrant)\n- Expected Vulnerability Impact: High risk of prolonged loss of off-site commercial electrical power grid.`;
+        } 
+        else if (cleanInput === "thira-hazard tech") {
+            outputText = `[THIRA HAZARD PROFILE: TECHNOLOGICAL DESIGNATION]\n- Threat: Catastrophic Grid Transformer Failure / SCADA Logic Loop Crash\n- Historical Frequency Score: 2/5 (Low likelihood, high severity hardware exhaustion)\n- Expected Vulnerability Impact: Unexpected physical pressure surges or immediate safety valve line lockouts.`;
+        }
+        else if (cleanInput === "thira-hazard adversarial") {
+Use code with caution.
+outputText = [THIRA HAZARD PROFILE: ADVERSARIAL DESIGNATION]\n- Threat: State-Sponsored Ransomware Deployment on Corporate IT moving to OT\n- Historical Frequency Score: 4/5 (Extremely high active threat targeting infrastructure)\n- Expected Vulnerability Impact: Total encryption of operational interfaces, loss of facility visibility, ransom demands.;
+}
+else if (cleanInput === "help") {
+outputText = Available commands:\n  'sectors', 'fema-codes', 'blueprint [water/power/transit]', 'thira-hazard [natural/tech/adversarial]', 'matrix-tool', 'clear';
+}
+else {
+outputText = Error: Command '${rawInput}' not recognized. Click a button below if you are experiencing text entry layout issues.;
+isError = true;
+}
+const outDiv = document.createElement('div');
+outDiv.className = 'output ' + (isError ? 'error-msg' : '');
+outDiv.textContent = outputText;
+history.appendChild(outDiv);
+terminal.scrollTop = terminal.scrollHeight;
+}
+input.addEventListener('keydown', function(e) {
+if (e.key === 'Enter') {
+executeCommand(input.value);
+input.value = '';
+}
+});
+function runCalculatorWizard() {
+let t = prompt("Enter Threat Likelihood Score (1-5):");
+if (t === null) return;
+let v = prompt("Enter Vulnerability Severity Score (1-5):");
+if (v === null) return;
+let c = prompt("Enter Consequence Operational Impact Score (1-5):");
+if (c === null) return;
+let scoreT = Math.min(Math.max(parseInt(t) || 1, 1), 5);
+let scoreV = Math.min(Math.max(parseInt(v) || 1, 1), 5);
+let scoreC = Math.min(Math.max(parseInt(c) || 1, 1), 5);
+let rpn = scoreT * scoreV * scoreC;
+let riskLevel = "LOW RISK ASSESSMENT TIER";
+let textStyle = "success-msg";
+if (rpn >= 60) {
+riskLevel = "CRITICAL RISK - IMMEDIATE SECURITY INTERVENTION REQUIRED";
+textStyle = "error-msg";
+} else if (rpn >= 25) {
+riskLevel = "MEDIUM RISK - SECURITY CONTROLS STRATEGY REQUIRED";
+textStyle = "warning-msg";
+}
+const calcDiv = document.createElement('div');
+calcDiv.className = 'output system-msg';
+calcDiv.innerHTML = ======================================================================<br> +
+CISA RISK PRIORITY CALCULATOR ACTIVATED (Risk = T x V x C)<br> +
+======================================================================<br> +
+>> EVALUATION METRICS RECORDED:<br> +
+   Threat [${scoreT}/5] x Vulnerability [${scoreV}/5] x Consequence [${scoreC}/5]<br> +
+>> CALCULATED RISK PRIORITY NUMBER (RPN): ${rpn} / 125<br> +
+<span class="${textStyle}">>> SYSTEM STATUS INDEX: ${riskLevel}</span><br> +
+======================================================================;
+history.appendChild(calcDiv);
+terminal.scrollTop = terminal.scrollHeight;
+}
